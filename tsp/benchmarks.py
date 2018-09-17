@@ -5,6 +5,8 @@ import requests
 import gzip,tarfile
 from math import sin, cos, radians
 import time
+import tspparser
+
 
 def download_tsp_heidelberg(all_tsp_url=r'https://wwwproxy.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/tsp/ALL_tsp.tar.gz',
     output_folder=r'benchmark_symmetric'):
@@ -77,5 +79,20 @@ def regular_polygon(edges,radius,center=(0,0)):
     theta = radians(360/edges)
     return [(radius*cos(i*theta)+center[0], radius*sin(i*theta)+center[1]) for i in range(edges)]    
 
+def benchmark_folder_info(benchmark_path):
+    import pandas as pd
+
+    if not path.exists(benchmark_path):
+        raise FileNotFoundError('Folder not found.')
+    files = sorted([f for f in listdir(benchmark_path) if f.endswith('.tsp')])
+    P = []
+    for f in files:
+        P.append(tspparser.info(path.join(benchmark_path,f)))
+    df = pd.DataFrame(P)
+    df.set_index('NAME',inplace=True)
+    return df
+    
+
 if __name__=='__main__':
-    pass
+    test_path = path.join('..','benchmarks') 
+    print(benchmark_folder_info(test_path))

@@ -1,18 +1,18 @@
 from math import radians, cos, sin, asin, acos, atan, atan2, sqrt,pi
 
-def euc_dist(node1,node2): 
+def euc_dist(point1,point2): 
 #the cost of travel between cities is specified by the Eulidean distance 
 #rounded to the nearest whole number (the TSPLIB EUC_2D-norm).
-    x1,y1 = node1[1],node1[2]
-    x2,y2 = node2[1],node2[2]
+    x1,y1 = point1[0],point1[1]
+    x2,y2 = point2[0],point2[1]
     #return int(((y2-y1)**2+(x2-x1)**2)**.5)
     return ((y2-y1)**2+(x2-x1)**2)**.5
 
 
-def geo_norm_waterloo(node1,node2): 
+def geo_norm_waterloo(point1,point2): 
 #http://www.math.uwaterloo.ca/tsp/world/geom.html
-    lat1,lon1 = node1[1],node1[2]
-    lat2,lon2 = node2[1],node2[2]
+    lat1,lon1 = point1[0],point1[1]
+    lat2,lon2 = point2[0],point2[1]
     lat1,lat2 = pi*lat1/180, pi*lat2/180
     lon1,lon2 = pi*lon1/180,pi*lon2/180
     q1 = cos(lat2)*sin(lon1-lon2)
@@ -31,10 +31,10 @@ def _radian_feo(x):
     return PI*(_deg+5.0*_min/3.0)/180.0
 
 
-def geo_norm_heidelberg(node1,node2):
+def geo_norm_heidelberg(point1,point2):
 #https://wwwproxy.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/TSPFAQ.html
-    lat1,lon1 = node1[1],node1[2]
-    lat2,lon2 = node2[1],node2[2]
+    lat1,lon1 = point1[0],point1[1]
+    lat2,lon2 = point2[0],point2[1]
     lon1, lat1, lon2, lat2 = map(_radian_feo, [lon1, lat1, lon2, lat2])
     RRR = 6378.388
     q1 = cos(lon1-lon2)
@@ -42,11 +42,11 @@ def geo_norm_heidelberg(node1,node2):
     q3 = cos(lat1+lat2)
     return int(RRR*acos(.5*((1.0+q1)*q2-(1.0-q1)*q3))+1.0)
 
-def haversine(node1,node2):
+def haversine(point1,point2):
 #https://en.wikipedia.org/wiki/Haversine_formula
 #https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
-    lat1,lon1 = node1[1],node1[2]
-    lat2,lon2 = node2[1],node2[2]
+    lat1,lon1 = point1[0],point1[1]
+    lat2,lon2 = point2[0],point2[1]
     # convert decimal degrees to radians 
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
     # haversine formula 
@@ -60,7 +60,9 @@ def haversine(node1,node2):
 
 
 if __name__=='__main__':
-    a = ['A',3,3]
-    b = ['B',7,6]
+    a = [3,3]
+    b = [7,6]
     print(euc_dist(a,b))
     print(haversine(a,b))
+    print(geo_norm_heidelberg(a,b))
+    print(geo_norm_waterloo(a,b))
