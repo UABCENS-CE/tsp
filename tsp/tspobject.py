@@ -27,6 +27,15 @@ class TSPObject:
             distance += self.metricfunc(self.points[v_idx],self.points[u_idx])
         return distance
 
+    def tour_coordinates(self,tour):
+        n = len(tour)
+        coords = []
+        for v in tour+[tour[0]]:
+            coords.append(self.points[self.V_idx[v]])
+        x = [c[0] for c in coords]
+        y = [c[1] for c in coords]
+        return x,y
+        
     def distance(self,u,v):
         u_idx = self.V_idx[u]
         v_idx = self.V_idx[v]
