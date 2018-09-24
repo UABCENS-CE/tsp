@@ -8,7 +8,8 @@ class TSPObject:
         self.data = tspparser.parse(tsp_file)
         self.V = [x[0] for x in self.data['nodes']]
         self.V_idx = {v:idx for idx,v in enumerate(self.V) }
-        self.points = [(x[1],x[2]) for x in self.data['nodes']]        
+        self.points = [(x[1],x[2]) for x in self.data['nodes']]  
+        self._M = None #Matriz de adyacencia     
 
     def neighbors(self,v):
         v_idx = self.V_idx[v]
@@ -41,6 +42,17 @@ class TSPObject:
         v_idx = self.V_idx[v]
         return self.metricfunc(self.points[v_idx],self.points[u_idx])
 
+    def M(self):
+        if self._M is None:
+            D = {name:{} for name in self.V}
+            for u in self.V:
+                for v in self.V:
+                    d = self.distance(u,v)
+                    D[u][v]=d
+                    D[v][u]=d
+            self._M = D
+        return self._M
+
 if __name__ == '__main__':
     test_file = path.join('..','benchmarks','dj38.tsp')
     O = TSPObject(test_file,metrics.euc_dist)
@@ -49,3 +61,4 @@ if __name__ == '__main__':
     print(O.distance('2','3'))
     print(O.distance('3','1'))
     print(O.evaluate_tour(['1','2','3']))
+    print(O.M())
